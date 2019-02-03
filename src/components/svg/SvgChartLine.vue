@@ -1,20 +1,8 @@
 <template>
   <div class="chart-line">
-    <svg :viewBox="viewBox"
-         :width="svgWidth"
-         :height="svgHeight"
-         >
-      <g class="chart-line__series-line">
-        <polyline v-for="(line, i) in plot"
-                  :key="i"
-                  :points="line"
-                  fill="none"
-                  stroke="#333"
-                  stroke-width="2">
-        </polyline>
-      </g>
+    <svg viewBox="0 0 600 400" width="600" height="400">
+      <path d="M 300 400 V 300 0" fill="none" stroke="#333" stroke-width="100"></path>
     </svg>
-    {{ plot }}
   </div>
 </template>
 
@@ -26,15 +14,15 @@ export default {
     svgWidth: { type: Number, default: 600 },
     svgHeight: { type: Number, default: 400 },
     paddingBottom: { type: Number, default: 36 },
-    paddingLeft: { type: Number, default: 24 },
+    paddingLeft: { type: Number, default: 36 },
     paddingRight: { type: Number, default: 12 },
   },
   data() {
     return {
       sample: [
-        [100, 200, 300, 400, 500],
-        [200, 300, 400, 800, 100],
-        [300, 400, 500, 100, 200],
+        [0, 100, 200, 300, 400, 500],
+        [0, 200, 300, 400, 2000, 100],
+        [0, 300, 400, 500, 100, 200],
       ],
     };
   },
@@ -58,14 +46,29 @@ export default {
       return this.sample
         .map(data => data.map((elem, index) => [
           (this.xAxisStep * index),
-          (elem / this.maxValue) * this.ratio,
+          // svgのY軸の扱いがグラフのY軸と逆のため-1
+          Math.floor((elem / this.maxValue) * this.ratio * this.chartHeight) * -1,
         ]));
     },
     plot() { return this.convertPoint.map(points => points.map(p => p.join(' ')).join(' ')); },
+    // Y軸方向の描画を逆にする
+    axisYtransform() { return `translate(${this.paddingLeft} ${this.chartHeight})`; },
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.line-0{
+  stroke:red;
+  stroke-width: 1px;
+}
+.line-1{
+  stroke:blue;
+  stroke-width: 1px;
+}
 
+.line-2{
+  stroke:green;
+  stroke-width: 1px;
+}
 </style>
