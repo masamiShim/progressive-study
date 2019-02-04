@@ -1,7 +1,33 @@
 <template>
   <div class="chart-line">
-    <svg viewBox="0 0 600 400" width="600" height="400">
-      <path d="M 300 400 V 300 0" fill="none" stroke="#333" stroke-width="100"></path>
+    <svg :viewBox="viewBox"
+         :width="svgWidth"
+         :height="svgHeight"
+    >
+      <g class="chart-line__series-line" :transform="axisYtransform">
+        <polyline v-for="(line, i) in plot"
+              :key="i"
+              :points="line"
+              fill="none"
+              :stroke-width="20"
+              :class="'line-' + i"
+        >
+        </polyline>
+      </g>
+      <!-- X軸 -->
+      <line :x1="paddingLeft"
+            :x2="svgWidth - paddingRight"
+            :y1="chartHeight"
+            :y2="chartHeight" stroke="#000"></line>
+      <!-- Y軸 -->
+      <line :x1="paddingLeft"
+            :x2="paddingLeft"
+            :y1="0"
+            :y2="chartHeight" stroke="#000"></line>
+      <!--FIXME: これ繰り返しでできるようにせな-->
+      <text :x="0" :y="chartHeight" font-size="12px">2000</text>
+      <!--FIXME: あとテキストは適当な数値算出するように頑張る-->
+      <text :x="paddingLeft" :y="svgHeight - (paddingBottom / 2  )" font-size="12px">111</text>
     </svg>
   </div>
 </template>
